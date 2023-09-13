@@ -1,6 +1,6 @@
 name: animated_scroll_item
 description: Wrapper for items inside lists or scrollable views that allows you to customize scroll animation
-version: 0.0.1
+version: 0.0.2
 homepage: https://github.com/G33kFreak/animated-scroll-item
 repository: https://github.com/G33kFreak/animated-scroll-item
 
