@@ -60,14 +60,14 @@ AnimatedScrollItem(
 | --------- | ------------------------------------------------------------------------------------ | ----------------------------- | -------------- |
 | `size`    | The size of space each item takes                                                    | `Size`                        | required field |
 | `configs` | List of animation configs, you can define as many as you want, but not less than one | `List\<ItemAnimationConfig\>` | required field |
-| `child`   | Defines progress, min value is 0, max value is 100                                   | `Widget`                      | required field |
+| `child`   | Your list item                                                                       | `Widget`                      | required field |
 
 ### `ItemAnimationConfig`
 
-| Param              | Description                                                                                                      | Type                     | Default value                    |
-| ------------------ | ---------------------------------------------------------------------------------------------------------------- | ------------------------ | -------------------------------- |
-| `itemTransform`    | Callback which defines behavior of animated item based on animation value.                                       | `ItemTransformAnimation` | required field                   |
-| `opacityTransform` | Defines the opacity of animated item based on animation value                                                    | `ItemOpacityTransform`   | `null`                           |
+| Param              | Description                                                                                                          | Type                     | Default value                    |
+| ------------------ | -------------------------------------------------------------------------------------------------------------------- | ------------------------ | -------------------------------- |
+| `itemTransform`    | Callback which defines behavior of animated item based on animation value.                                           | `ItemTransformAnimation` | required field                   |
+| `opacityTransform` | Defines the opacity of animated item based on animation value                                                        | `ItemOpacityTransform`   | `null`                           |
 | `animationRange`   | Range of position on visible area of list, where item has to be animated. `1` - the end of visible area, `0` - start | `AnimationRange`         | `AnimationRange(min: 0, max: 1)` |
 
 ### `ItemTransformAnimation`
