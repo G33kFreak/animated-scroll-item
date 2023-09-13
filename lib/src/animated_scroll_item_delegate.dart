@@ -12,38 +12,61 @@ class AnimatedScrollItemDelegate extends FlowDelegate {
     this.itemAnimationConfigs = const [],
   }) : super(repaint: scrollableState.position);
 
+  bool _checkIfNeedAnimate(AnimationRange range, double currentFraction) {
+    return currentFraction >= range.min && currentFraction <= range.max;
+  }
+
+  double _calculateRangeFraction(
+    AnimationRange range,
+    double currentFraction,
+  ) {
+    final rangeLength = range.max - range.min;
+    final fractionInRange = currentFraction - range.min;
+
+    return fractionInRange / rangeLength;
+  }
+
   @override
   void paintChildren(FlowPaintingContext context) {
-    if (itemAnimationConfigs.isNotEmpty) {
-      final scrollableBox =
-          scrollableState.context.findRenderObject() as RenderBox;
-      final listItemBox = listItemContext.findRenderObject() as RenderBox;
-      final listItemOffset = listItemBox.localToGlobal(
-        listItemBox.size.centerLeft(Offset.zero),
-        ancestor: scrollableBox,
+    if (itemAnimationConfigs.isEmpty) {
+      return context.paintChild(0);
+    }
+
+    final scrollableBox =
+        scrollableState.context.findRenderObject() as RenderBox;
+    final listItemBox = listItemContext.findRenderObject() as RenderBox;
+    final listItemOffset = listItemBox.localToGlobal(
+      listItemBox.size.centerLeft(Offset.zero),
+      ancestor: scrollableBox,
+    );
+
+    final viewportDimension = scrollableState.position.viewportDimension;
+    final scrollFraction = (listItemOffset.dy / viewportDimension).clamp(
+      0.0,
+      1.0,
+    );
+
+    Matrix4 matrix = Matrix4.identity();
+    double opacity = 1;
+
+    for (final config in itemAnimationConfigs) {
+      final needAnimate = _checkIfNeedAnimate(
+        config.animationRange,
+        scrollFraction,
       );
 
-      final viewportDimension = scrollableState.position.viewportDimension;
-      final scrollFraction = (listItemOffset.dy / viewportDimension).clamp(
-        0.0,
-        1.0,
-      );
+      if (needAnimate) {
+        final animationValue = _calculateRangeFraction(
+          config.animationRange,
+          scrollFraction,
+        );
 
-      for (final config in itemAnimationConfigs) {
-        final needAnimate = config.threshold.comparer.call(scrollFraction);
-
-        if (needAnimate) {
-          final animationValue =
-              (1 - scrollFraction) / config.threshold.threshold;
-
-          context.paintChild(
-            0,
-            transform: config.itemTransform.call(animationValue),
-            opacity: config.opacityTransform?.call(animationValue) ?? 1,
-          );
-        }
+        matrix = config.itemTransform.call(animationValue, matrix);
+        opacity = config.opacityTransform?.call(animationValue) ?? opacity;
       }
     }
+
+    return context.paintChild(0, transform: matrix, opacity: opacity);
   }
 
   @override

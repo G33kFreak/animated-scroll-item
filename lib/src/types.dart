@@ -1,44 +1,31 @@
 import 'package:flutter/rendering.dart';
 
-typedef ThresholdComparer = bool Function(double scrollFraction);
-typedef ItemTransformAnimation = Matrix4 Function(double animationValue);
+typedef ItemTransformAnimation = Matrix4 Function(
+  double animationValuen,
+  Matrix4 matrix,
+);
 typedef ItemOpacityTransform = double Function(double animationValue);
 
-class Threshold {
-  final double threshold;
-  final ThresholdComparer comparer;
+class AnimationRange {
+  final double min;
+  final double max;
 
-  const Threshold._({required this.threshold, required this.comparer});
-
-  factory Threshold.greaterThen(double threshold) => Threshold._(
-      threshold: threshold,
-      comparer: (double scrollFraction) => scrollFraction > threshold);
-
-  factory Threshold.lowerThen(double threshold) => Threshold._(
-      threshold: threshold,
-      comparer: (double scrollFraction) => scrollFraction < threshold);
-
-  factory Threshold.equalTo(double threshold) => Threshold._(
-      threshold: threshold,
-      comparer: (double scrollFraction) => scrollFraction == threshold);
-
-  factory Threshold.greaterOrEqual(double threshold) => Threshold._(
-      threshold: threshold,
-      comparer: (double scrollFraction) => scrollFraction >= threshold);
-
-  factory Threshold.lowerOrEqual(double threshold) => Threshold._(
-      threshold: threshold,
-      comparer: (double scrollFraction) => scrollFraction <= threshold);
+  const AnimationRange({
+    this.min = 0,
+    this.max = 1,
+  })  : assert(max > min),
+        assert(max >= 0 && max <= 1),
+        assert(min >= 0 && min <= 1);
 }
 
 class ItemAnimationConfig {
-  final Threshold threshold;
   final ItemTransformAnimation itemTransform;
   final ItemOpacityTransform? opacityTransform;
+  final AnimationRange animationRange;
 
   const ItemAnimationConfig({
-    required this.threshold,
     required this.itemTransform,
+    this.animationRange = const AnimationRange(),
     this.opacityTransform,
   });
 }

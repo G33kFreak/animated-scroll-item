@@ -23,6 +23,7 @@ class AnimatedScrollItem extends StatelessWidget {
           delegate: AnimatedScrollItemDelegate(
             scrollableState: Scrollable.of(context),
             listItemContext: context,
+            itemAnimationConfigs: configs,
           ),
           children: [child],
         ),
