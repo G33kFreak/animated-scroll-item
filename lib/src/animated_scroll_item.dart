@@ -10,9 +10,10 @@ class AnimatedScrollItem extends StatelessWidget {
   const AnimatedScrollItem({
     Key? key,
     required this.size,
-    this.configs = const [],
+    required this.configs,
     required this.child,
-  }) : super(key: key);
+  })  : assert(configs.length > 0),
+        super(key: key);
 
   @override
   Widget build(BuildContext context) {

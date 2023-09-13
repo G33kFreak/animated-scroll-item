@@ -61,7 +61,11 @@ class AnimatedScrollItemDelegate extends FlowDelegate {
           scrollFraction,
         );
 
-        matrix = config.itemTransform.call(animationValue, matrix);
+        matrix = config.itemTransform.call(
+          animationValue,
+          listItemBox.size,
+          matrix,
+        );
         opacity = config.opacityTransform?.call(animationValue) ?? opacity;
       }
     }

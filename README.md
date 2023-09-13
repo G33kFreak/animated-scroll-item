@@ -1,39 +1,110 @@
-<!--
-This README describes the package. If you publish this package to pub.dev,
-this README's contents appear on the landing page for your package.
+Wrapper for the scrollable items (e.g. SingleChildScrollView, ListView). It allows you to highly customize behavior of visible items. Based on [Flow widget](https://api.flutter.dev/flutter/widgets/Flow-class.html)
 
-For information about how to write a good package README, see the guide for
-[writing package pages](https://dart.dev/guides/libraries/writing-package-pages).
+<p>
+  <img src="https://github.com/G33kFreak/animated-scroll-item/blob/main/doc/example1.gif?raw=true"
+    alt="example" height="400"/>
+  &nbsp;&nbsp;&nbsp;&nbsp;
+</p>
 
-For general information about developing packages, see the Dart guide for
-[creating packages](https://dart.dev/guides/libraries/create-library-packages)
-and the Flutter guide for
-[developing packages and plugins](https://flutter.dev/developing-packages).
--->
 
-TODO: Put a short description of the package here that helps potential users
-know whether this package might be useful for them.
-
-## Features
-
-TODO: List what your package can do. Maybe include images, gifs, or videos.
+> **_NOTE:_** keep in mind it hasn't been tested for large lists
 
 ## Getting started
 
-TODO: List prerequisites and provide or point to information on how to
-start using the package.
+### Installing
 
-## Usage
-
-TODO: Include short and useful examples for package users. Add longer examples
-to `/example` folder.
-
-```dart
-const like = 'sample';
+```yaml
+dependencies:
+  animated_scroll_item: ^0.0.1
 ```
 
-## Additional information
+### Import
 
-TODO: Tell users more about the package: where to find more information, how to
-contribute to the package, how to file issues, what response they can expect
-from the package authors, and more.
+```dart
+import 'package:animated_scroll_item/animated_scroll_item.dart';
+```
+
+## How to use
+
+Wrap your item widget with `AnimatedScrollItem` and provide its configuration:
+
+```dart
+AnimatedScrollItem(
+  configs: [
+    ItemAnimationConfig(
+        // ...animation config
+    ),
+    ItemAnimationConfig(
+        // ...another animation config
+    ),
+  ],
+  size: const Size(double.infinity, 120), // The size is required
+  // Provide your widget
+  child: SizedBox(
+    height: 120,
+    child: Card(
+      color: Colors.blue,
+      child: Center(
+        child: Text('$index'),
+      ),
+    ),
+  ),
+),
+```
+
+## Configuration
+
+### `AnimatedScrollItem`
+
+| Param     | Description                                                                          | Type                          | Default value  |
+| --------- | ------------------------------------------------------------------------------------ | ----------------------------- | -------------- |
+| `size`    | The size of space each item takes                                                    | `Size`                        | required field |
+| `configs` | List of animation configs, you can define as many as you want, but not less than one | `List\<ItemAnimationConfig\>` | required field |
+| `child`   | Defines progress, min value is 0, max value is 100                                   | `Widget`                      | required field |
+
+### `ItemAnimationConfig`
+
+| Param              | Description                                                                                                      | Type                     | Default value                    |
+| ------------------ | ---------------------------------------------------------------------------------------------------------------- | ------------------------ | -------------------------------- |
+| `itemTransform`    | Callback which defines behavior of animated item based on animation value.                                       | `ItemTransformAnimation` | required field                   |
+| `opacityTransform` | Defines the opacity of animated item based on animation value                                                    | `ItemOpacityTransform`   | `null`                           |
+| `animationRange`   | Range of position on visible area of list, where item has to be animated. `1` - the end of visible area, `0` - start | `AnimationRange`         | `AnimationRange(min: 0, max: 1)` |
+
+### `ItemTransformAnimation`
+
+Callback which provides you `animationValue` in range from `0` to `1`, `itemSize` also can be useful for your animations, and `matrix`, the object of `Matrix4` on which you have to apply your transforms.
+
+Example:
+```dart
+itemTransform: (
+  double animationValue,
+  Size size,
+  Matrix4 matrix,
+) {
+  return matrix
+    ..scale(animationValue)
+    ..setTranslation(
+        Vector3(size.width * (1 - animationValue) * .5, 0, 0));
+},
+```
+
+### `ItemOpacityTransform`
+
+This callback allows you to define opacity depending on `animationValue`
+
+Example:
+```dart
+opacityTransform: (animationValue) => animationValue
+```
+
+### `AnimationRange`
+
+Here you can define part of visible list where items has to be animated. It takes values from `0` to `1`.
+Example:
+```dart
+animationRange: const AnimationRange(min: 0, max: .1),
+```
+
+## Contributing
+
+Feel free to create PR or open issue :)

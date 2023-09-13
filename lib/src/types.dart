@@ -1,7 +1,8 @@
 import 'package:flutter/rendering.dart';
 
 typedef ItemTransformAnimation = Matrix4 Function(
-  double animationValuen,
+  double animationValue,
+  Size itemSize,
   Matrix4 matrix,
 );
 typedef ItemOpacityTransform = double Function(double animationValue);
