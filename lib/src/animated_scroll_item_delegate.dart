@@ -12,10 +12,16 @@ class AnimatedScrollItemDelegate extends FlowDelegate {
     this.itemAnimationConfigs = const [],
   }) : super(repaint: scrollableState.position);
 
+  ///
+  /// Checks if item is currently in provided [AnimationRange]
+  ///
   bool _checkIfNeedAnimate(AnimationRange range, double currentFraction) {
     return currentFraction >= range.min && currentFraction <= range.max;
   }
 
+  ///
+  /// Calculates current fraction inside provided [AnimationRange]
+  ///
   double _calculateRangeFraction(
     AnimationRange range,
     double currentFraction,

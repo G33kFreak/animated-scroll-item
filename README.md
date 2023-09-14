@@ -15,7 +15,7 @@ Wrapper for the scrollable items (e.g. SingleChildScrollView, ListView). It allo
 
 ```yaml
 dependencies:
-  animated_scroll_item: ^0.0.1
+  animated_scroll_item: ^0.0.3
 ```
 
 ### Import
